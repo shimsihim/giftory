@@ -1,0 +1,49 @@
+HELP.md
+.gradle
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
+.env
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+bin/
+!**/src/main/**/bin/
+!**/src/test/**/bin/
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+### VS Code ###
+.vscode/
+
+### 추가 추천 ###
+/logs/                      # 로컬 로그 파일
+/tmp/                       # 임시 파일
+*.log                       # 로그 파일
+*.class                     # 컴파일 산출물
+*.jar                       # 배포용 jar 파일 (gradle wrapper 제외)
+*.war                       #배포용 war 파일
+*.swp                       # vim swap 파일
+.DS_Store                   # macOS 임시 파일
+Thumbs.db                   # Windows 임시 파일
