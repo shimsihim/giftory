@@ -1,6 +1,7 @@
 package com.side.giftory.user.service;
 
 import com.side.giftory.security.RoleType;
+import com.side.giftory.security.UserPrincipal;
 import com.side.giftory.security.oauth2.SocialType;
 import com.side.giftory.user.domain.User;
 import com.side.giftory.user.domain.UserSocial;
@@ -8,6 +9,7 @@ import com.side.giftory.user.dto.UserSocialRegistDTO;
 import com.side.giftory.user.repository.UserRepository;
 import com.side.giftory.user.repository.UserSocialRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -38,12 +40,12 @@ public class UserServiceImpl implements UserService{
      * @return 생성된 User
      * @throws IllegalArgumentException 이메일 중복 시
      */
-    public User registerNormal(User dto) {
+/*    public User registerNormal(User dto) {
         Optional<User> exist = userRepository.findByEmail(dto.getEmail());
         if (exist.isPresent()) throw new IllegalArgumentException("이미 존재하는 이메일");
         dto.setRole(RoleType.ROLE_USER);
         return userRepository.save(dto);
-    }
+    }*/
 
     /**
      * 소셜 로그인 임시회원 생성
@@ -51,16 +53,23 @@ public class UserServiceImpl implements UserService{
      * @param dto 소셜 로그인 정보
      * @return 생성된 User
      */
-    public User registerSocial(UserSocialRegistDTO dto, SocialType socialType, String providerId) {
+    @Transactional
+    public User registerSocial(UserPrincipal userPrincipal) {
         User user = User.builder()
-                        .email(dto.getEmail())
-                        .phone(dto.getPhone())
+                .username(userPrincipal.getUsername() != null ? userPrincipal.getUsername() : userPrincipal.getSocialType()+"_guest")
+                        .email(userPrincipal.getEmail())
+                        .phoneNo(userPrincipal.getPhoneNo())
                         .role(RoleType.ROLE_GUEST)
-                        .profileUrl(dto.getProfileUrl())
                         .build();
         User savedUser = userRepository.save(user);
-        UserSocial social = new UserSocial(savedUser, socialType, providerId);
+
+        UserSocial social = UserSocial.builder()
+                            .socialId(userPrincipal.getSocialId())
+                            .socialType(userPrincipal.getSocialType())
+                            .user(user)
+                            .build();
         userSocialRepository.save(social);
+
         return savedUser;
     }
 

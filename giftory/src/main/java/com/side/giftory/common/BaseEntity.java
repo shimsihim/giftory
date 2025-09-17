@@ -3,6 +3,7 @@ package com.side.giftory.common;
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.PrePersist;
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -26,9 +27,15 @@ import java.time.LocalDateTime;
  */
 public abstract class BaseEntity {
     @CreatedDate
-    @Column(updatable = false)
+    @Column(updatable = false , nullable = false)
     private LocalDateTime createdAt;
 
     @LastModifiedDate
     private LocalDateTime updatedAt;
+
+    @PrePersist
+    protected void onCreate() {
+        if (this.createdAt == null) this.createdAt = LocalDateTime.now();
+        if (this.updatedAt == null) this.updatedAt = this.createdAt;
+    }
 }

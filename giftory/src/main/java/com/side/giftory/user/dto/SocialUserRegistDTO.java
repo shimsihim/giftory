@@ -1,19 +1,24 @@
 package com.side.giftory.user.dto;
 
 import com.side.giftory.security.oauth2.SocialType;
-import com.side.giftory.user.domain.User;
-import jakarta.persistence.Column;
 import lombok.Builder;
 import lombok.Data;
 
-
 /**
- * 처음 소셜 가입 시 소셜 정보 등록을 위한 DTO
+ * 소셜 로그인한 사용자를 임시저장하는 DTO
  */
 @Data
 @Builder
-public class UserSocialRegistDTO {
-    private User user;
+public class SocialUserRegistDTO {
+    private String username;
+
+    private String email;
+
+    private String phone;
+
+    private String profileUrl;
+
     private SocialType socialType;
+
     private String socialId;
 }

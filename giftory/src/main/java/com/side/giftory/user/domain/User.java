@@ -1,5 +1,6 @@
 package com.side.giftory.user.domain;
 
+import com.side.giftory.common.BaseEntity;
 import com.side.giftory.security.RoleType;
 import jakarta.persistence.*;
 import lombok.*;
@@ -7,12 +8,15 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "users")
+@Table(name = "user")
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class User {
+public class User extends BaseEntity {
+    /**
+     * 필수 사용자 입력값 : username , password , phoneNo
+     */
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,7 +33,7 @@ public class User {
     private String password;
 
     @Column(length = 20)
-    private String phone;
+    private String phoneNo;
 
     @Column(name = "profile_url", length = 255)
     private String profileUrl;

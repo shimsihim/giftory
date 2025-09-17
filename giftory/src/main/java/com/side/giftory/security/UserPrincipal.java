@@ -1,10 +1,8 @@
 package com.side.giftory.security;
 
 import com.side.giftory.security.oauth2.SocialType;
-import lombok.Data;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.ToString;
+import com.side.giftory.user.domain.User;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,13 +18,14 @@ import java.util.Map;
 public class UserPrincipal implements UserDetails, OAuth2User {
 
     private Long id;
-    private final String username;
-    private final String email;
-    private final String phoneNo;
+    private String username;
+    private String email;
+    private String phoneNo;
     private final String password;
     private final SocialType socialType;
     private final String socialId;
-    private final RoleType roleType;
+    @Setter
+    private RoleType roleType;
     private final Map<String,Object> attributes;
     private Collection<? extends GrantedAuthority> authorities;
 
@@ -46,6 +45,12 @@ public class UserPrincipal implements UserDetails, OAuth2User {
         this.roleType = roleType;
         this.attributes = Collections.unmodifiableMap(attributes);
         this.authorities = Collections.singletonList(new SimpleGrantedAuthority(RoleType.ROLE_GUEST.name())); // 사용자 db조회 전 guest로 초기화
+    }
+
+    public void setByUser(User user){
+        this.username = user.getUsername();
+        this.email = user.getEmail();
+        this.phoneNo = user.getPhoneNo();
     }
 
     // UserDetails
