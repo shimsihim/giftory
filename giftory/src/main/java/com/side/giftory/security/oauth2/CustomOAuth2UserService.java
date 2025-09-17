@@ -10,6 +10,7 @@ import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserServ
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
+import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import com.side.giftory.user.domain.UserSocial;
@@ -20,11 +21,8 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
 
-    @Autowired
     private final UserSocialRepository userSocialRepository;
-    @Autowired
     private final UserService userService;
-    @Autowired
     private final OAuthUserInfoFactory oAuthUserInfoFactory;
 
     @Override
@@ -34,12 +32,10 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         Map<String, Object> attributes = oAuth2User.getAttributes();
 
         String registrationId = userRequest.getClientRegistration().getRegistrationId(); // "kakao"
-        String userNameAttributeName = userRequest.getClientRegistration()
-                .getProviderDetails().getUserInfoEndpoint().getUserNameAttributeName();
 
         OAuthUserInfoStrategy strategy = oAuthUserInfoFactory.getStrategy(registrationId);
         if (strategy == null) {
-            throw new OAuth2AuthenticationException("Unsupported OAuth2 provider: " + registrationId);
+            throw new OAuth2AuthenticationException(new OAuth2Error("unsupported_provider"), "Unsupported OAuth2 provider: " + registrationId);
         }
 
         UserPrincipal userPrincipal = strategy.extractUser(attributes); // name과 이메일 정도 , 타입 , 소셜아이디...

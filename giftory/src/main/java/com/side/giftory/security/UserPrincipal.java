@@ -14,17 +14,16 @@ import java.util.Map;
 
 
 @Getter
-@ToString
+@ToString(exclude = {"password"})
 public class UserPrincipal implements UserDetails, OAuth2User {
 
     private Long id;
     private String username;
     private String email;
     private String phoneNo;
-    private final String password;
+    private String password;
     private final SocialType socialType;
     private final String socialId;
-    @Setter
     private RoleType roleType;
     private final Map<String,Object> attributes;
     private Collection<? extends GrantedAuthority> authorities;
@@ -48,9 +47,17 @@ public class UserPrincipal implements UserDetails, OAuth2User {
     }
 
     public void setByUser(User user){
-        this.username = user.getUsername();
-        this.email = user.getEmail();
-        this.phoneNo = user.getPhoneNo();
+        this.id = user.getId();
+               this.username = user.getUsername();this.email = user.getEmail();
+               this.phoneNo = user.getPhoneNo();
+               if (user.getRole() != null) {
+                   setRoleType(user.getRole());
+               }
+    }
+
+    public void setRoleType(RoleType roleType) {
+        this.roleType = roleType;
+        this.authorities = Collections.singletonList(new SimpleGrantedAuthority(roleType.name()));
     }
 
     // UserDetails
