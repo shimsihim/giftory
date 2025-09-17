@@ -29,6 +29,7 @@ public class UserSocial {
     private User user;
 
     @Column(name = "social_type", nullable = false)
+    @Enumerated(EnumType.STRING)
     private SocialType socialType;
 
     @Column(name = "social_id", nullable = false)

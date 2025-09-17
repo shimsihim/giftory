@@ -26,11 +26,11 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService{
 
     private final UserRepository userRepository;
-    private final UserSocialRepository userSocialRepository;
+    private final UserSocialService userSocialService;
 
-    public UserServiceImpl(UserRepository userRepository, UserSocialRepository userSocialRepository) {
+    public UserServiceImpl(UserRepository userRepository , UserSocialService userSocialService) {
         this.userRepository = userRepository;
-        this.userSocialRepository = userSocialRepository;
+        this.userSocialService = userSocialService;
     }
 
     /**
@@ -63,12 +63,7 @@ public class UserServiceImpl implements UserService{
                         .build();
         User savedUser = userRepository.save(user);
 
-        UserSocial social = UserSocial.builder()
-                            .socialId(userPrincipal.getSocialId())
-                            .socialType(userPrincipal.getSocialType())
-                            .user(user)
-                            .build();
-        userSocialRepository.save(social);
+        UserSocial social = userSocialService.registerSocial(savedUser , userPrincipal);
 
         return savedUser;
     }

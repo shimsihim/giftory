@@ -7,9 +7,14 @@ spring:
     show-sql: true            # 쿼리 로그 출력
     properties:
       hibernate:
+        show_sql: true               # SQL 출력
         format_sql: true      # SQL 예쁘게 출력
         use_sql_comments: true
         generate_statistics: true
+        type:
+          descriptor:
+            sql:
+              BasicBinder: TRACE     # 바인딩 파라미터 로그 출력
 
   security:
     oauth2:
@@ -44,4 +49,5 @@ logging:
     org.springframework.security: DEBUG
     root: info
     org.hibernate.SQL: debug
-    org.hibernate.type.descriptor.sql.BasicBinder: trace
+    org.hibernate.type.descriptor.sql: trace
+    org.hibernate.orm.jdbc.bind: trace

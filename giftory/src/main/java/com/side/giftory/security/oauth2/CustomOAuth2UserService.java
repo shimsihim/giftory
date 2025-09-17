@@ -21,11 +21,10 @@ import java.util.Map;
 public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
 
     @Autowired
-    private static UserSocialRepository userSocialRepository;
+    private final UserSocialRepository userSocialRepository;
     @Autowired
-    private static UserService userService;
-
-
+    private final UserService userService;
+    @Autowired
     private final OAuthUserInfoFactory oAuthUserInfoFactory;
 
     @Override
@@ -45,7 +44,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 
         UserPrincipal userPrincipal = strategy.extractUser(attributes); // name과 이메일 정도 , 타입 , 소셜아이디...
 
-        User user = userSocialRepository.findBySocialTypeAndSocialIdWithUser(userPrincipal.getSocialType(), registrationId)
+        User user = userSocialRepository.findBySocialTypeAndSocialIdWithUser(userPrincipal.getSocialType(), userPrincipal.getSocialId())
                 .map(UserSocial::getUser)
                 .orElseGet(() -> userService.registerSocial(userPrincipal));
 
