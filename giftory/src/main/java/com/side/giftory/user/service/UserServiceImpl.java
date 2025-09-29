@@ -63,7 +63,7 @@ public class UserServiceImpl implements UserService{
                         .build();
         User savedUser = userRepository.save(user);
 
-        UserSocial social = userSocialService.registerSocial(savedUser , userPrincipal);
+        userSocialService.registerSocial(savedUser , userPrincipal);
 
         return savedUser;
     }

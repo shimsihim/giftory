@@ -8,4 +8,11 @@ import java.util.Map;
 
 public interface OAuthUserInfoStrategy {
     UserPrincipal extractUser(Map<String, Object> attributes);
+    String getProviderId();
+    default String getOrDefaultName(String name, String socialId) {
+        if (name == null || name.isBlank()) {
+            return getProviderId().toLowerCase() + "_" + socialId;
+        }
+        return name;
+    }
 }

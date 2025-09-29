@@ -7,8 +7,11 @@ import com.side.giftory.user.domain.User;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.stereotype.Component;
+
 import java.util.Map;
 
+@Component
 public class KakaoUserInfoStrategy implements OAuthUserInfoStrategy {
 
     @Override
@@ -30,11 +33,14 @@ public class KakaoUserInfoStrategy implements OAuthUserInfoStrategy {
 
         String email = (String) kakaoAccount.get("email"); // null 가능
         String name = OAuth2UserInfoUtils.safeGetString(profile, "nickname");
-        if (name.isBlank()) {
-            name = "kakao_" + socialId;
-        }
+        name = getOrDefaultName(name , socialId);
         String profileImage = OAuth2UserInfoUtils.safeGetString(profile, "profile_image_url");
 
         return new UserPrincipal(name ,email , "" , "" , socialType ,socialId , null ,attributes);
+    }
+
+    @Override
+    public String getProviderId() {
+        return "kakao";
     }
 }

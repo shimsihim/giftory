@@ -15,15 +15,26 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import com.side.giftory.user.domain.UserSocial;
 
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
 
     private final UserSocialRepository userSocialRepository;
     private final UserService userService;
-    private final OAuthUserInfoFactory oAuthUserInfoFactory;
+    //private final OAuthUserInfoFactory oAuthUserInfoFactory;
+    private final Map<String, OAuthUserInfoStrategy> strategyMap;
+
+    public CustomOAuth2UserService(UserSocialRepository userSocialRepository,
+                                   UserService userService,
+                                   List<OAuthUserInfoStrategy> strategies) {
+        this.userSocialRepository = userSocialRepository;
+        this.userService = userService;
+        this.strategyMap = strategies.stream() // 각 소셜별 전략bean은 클래스명으로 등록되어있음 => 소셜 명으로 map등록
+                .collect(Collectors.toMap(OAuthUserInfoStrategy::getProviderId, s -> s));
+    }
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -33,7 +44,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 
         String registrationId = userRequest.getClientRegistration().getRegistrationId(); // "kakao"
 
-        OAuthUserInfoStrategy strategy = oAuthUserInfoFactory.getStrategy(registrationId);
+        OAuthUserInfoStrategy strategy = strategyMap.get(registrationId);
         if (strategy == null) {
             throw new OAuth2AuthenticationException(new OAuth2Error("unsupported_provider"), "Unsupported OAuth2 provider: " + registrationId);
         }

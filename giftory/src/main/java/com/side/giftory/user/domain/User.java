@@ -22,11 +22,11 @@ public class User extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true, length = 100)
+    @Column(nullable = false, unique = false, length = 100)
     @Setter
     private String username;
 
-    @Column(nullable = true, unique = false, length = 100)
+    @Column(nullable = true, unique = true, length = 100)
     private String email;
 
     @Column

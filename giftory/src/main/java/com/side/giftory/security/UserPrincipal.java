@@ -34,16 +34,16 @@ public class UserPrincipal implements UserDetails, OAuth2User {
     }
 
     //소셜 로그인 시 생성
-    public UserPrincipal( String username, String email ,String passWord, String phoneNo , SocialType socialType , String socialId ,RoleType roleType , Map<String,Object> attributes) {
+    public UserPrincipal(String username, String email , String password, String phoneNo , SocialType socialType , String socialId , RoleType roleType , Map<String,Object> attributes) {
         this.username = username;
         this.email = email;
         this.phoneNo = phoneNo;
-        this.password = passWord;
+        this.password = password;
         this.socialType = socialType;
         this.socialId = socialId;
         this.roleType = roleType;
         this.attributes = Collections.unmodifiableMap(attributes);
-        this.authorities = Collections.singletonList(new SimpleGrantedAuthority(RoleType.ROLE_GUEST.name())); // 사용자 db조회 전 guest로 초기화
+        setRoleType(roleType != null ? roleType : RoleType.ROLE_GUEST);
     }
 
     public void setByUser(User user){
