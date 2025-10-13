@@ -18,6 +18,7 @@ public interface UserMapper {
     @Mapping(source = "roleType", target = "role")
     @Mapping(target = "deletedAt", ignore = true)
     @Mapping(target = "profileUrl", ignore = true)
+    @Mapping(target = "id", ignore = true)
     User toEntity(UserPrincipal principal);
 
     @Mapping(source = "username", target = "name")
