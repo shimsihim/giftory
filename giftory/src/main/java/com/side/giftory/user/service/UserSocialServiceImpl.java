@@ -45,4 +45,9 @@ public class UserSocialServiceImpl implements UserSocialService{
 
         return savedUserSocial;
     }
+
+    public UserSocial findSocial(UserPrincipal userPrincipal) {
+        UserSocial userSocial = userSocialRepository.findBySocialTypeAndSocialIdWithUser(userPrincipal.getSocialType() , userPrincipal.getSocialId()).orElseThrow(()-> new NoSuchElementException());
+        return userSocial;
+    }
 }

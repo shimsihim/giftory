@@ -2,6 +2,7 @@ package com.side.giftory.user.domain;
 
 import com.side.giftory.common.BaseEntity;
 import com.side.giftory.security.RoleType;
+import com.side.giftory.user.dto.request.RegistUserDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -22,12 +23,17 @@ public class User extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = false, length = 100)
+    @Column( length = 100)
     @Setter
     private String username;
 
+
     @Column(nullable = true, unique = true, length = 100)
     private String email;
+
+    @Column(nullable = true,unique = true, length = 100)
+    @Setter
+    private String loginId;
 
     @Column
     private String password;
@@ -69,5 +75,21 @@ public class User extends BaseEntity {
 
     public void restore() {
         this.deletedAt = null;
+    }
+
+    public void registUser(RegistUserDTO registUserDTO){
+        this.loginId = registUserDTO.getLoginId();
+        this.password = registUserDTO.getPassword();
+        this.phoneNo = registUserDTO.getPhoneNo();
+        this.email = registUserDTO.getEmail();
+        this.username = registUserDTO.getName();
+        this.role = RoleType.ROLE_USER;
+    }
+
+    public void updateUserInfo(RegistUserDTO registUserDTO){
+        this.password = registUserDTO.getPassword();
+        this.phoneNo = registUserDTO.getPhoneNo();
+        this.email = registUserDTO.getEmail();
+        this.username = registUserDTO.getName();
     }
 }

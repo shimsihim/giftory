@@ -1,18 +1,18 @@
 package com.side.giftory.user.service;
 
+import com.side.giftory.common.exception.UserNotFoundException;
 import com.side.giftory.security.RoleType;
 import com.side.giftory.security.UserPrincipal;
-import com.side.giftory.security.oauth2.SocialType;
+import com.side.giftory.user.UserMapper;
 import com.side.giftory.user.domain.User;
-import com.side.giftory.user.domain.UserSocial;
-import com.side.giftory.user.dto.UserSocialRegistDTO;
+import com.side.giftory.user.dto.request.RegistUserDTO;
+import com.side.giftory.user.dto.response.UserDTO;
 import com.side.giftory.user.repository.UserRepository;
-import com.side.giftory.user.repository.UserSocialRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 /**
  * UserService
@@ -23,15 +23,12 @@ import java.util.Optional;
  *  - Role 변경, Soft Delete 처리 포함
  */
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService{
 
     private final UserRepository userRepository;
     private final UserSocialService userSocialService;
-
-    public UserServiceImpl(UserRepository userRepository , UserSocialService userSocialService) {
-        this.userRepository = userRepository;
-        this.userSocialService = userSocialService;
-    }
+    private final UserMapper userMapper;
 
     /**
      * 일반 회원가입 처리
@@ -68,27 +65,42 @@ public class UserServiceImpl implements UserService{
         return savedUser;
     }
 
-    /**
-     * 임시회원(GUEST) → 정식회원(USER) 전환
-     *
-     * @param userId 임시회원 User ID
-     * @param username 입력된 사용자 이름
-     * @return 업데이트된 User
-     * @throws NoSuchElementException 존재하지 않는 User ID
-     */
-    public User convertGuestToUser(Long userId, String username) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NoSuchElementException("사용자 없음"));
-        user.setUsername(username);
-        user.setRole(RoleType.ROLE_USER);
-        return userRepository.save(user);
+    @Override//회원가입
+    public UserDTO signup(UserPrincipal userPrincipal, RegistUserDTO registUserDTO) {
+        User registUser;
+        if(userPrincipal == null){
+            registUser = new User();
+            registUser.registUser(registUserDTO);
+            registUser = userRepository.save(registUser);
+        }
+        else{
+            registUser = userRepository.findById(userPrincipal.getId())
+                    .map(user -> {
+                        user.registUser(registUserDTO);
+                        return user;
+                    })
+                    .orElseThrow(() -> new UserNotFoundException());
+        }
+        return userMapper.toDTO(registUser);
     }
 
-    // Soft Delete
-    public void deleteUser(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(()-> new NoSuchElementException("삭제할 사용자가 없습니다."));
+    @Override
+    public UserDTO updateUserInfo(UserPrincipal userPrincipal, RegistUserDTO registUserDTO) {
+        User updateUserInfo = userRepository.findById(userPrincipal.getId())
+                .map(user -> {
+                    user.updateUserInfo(registUserDTO);
+                    return user;
+                })
+                .orElseThrow(() -> new UserNotFoundException());
+        return userMapper.toDTO(updateUserInfo);
+    }
+
+    @Override
+    public UserDTO deleteUser(UserPrincipal userPrincipal) {
+        User user = userRepository.findById(userPrincipal.getId()).orElseThrow(()-> new NoSuchElementException("삭제할 사용자가 없습니다."));
         user.delete();
-        userRepository.save(user);
+        user = userRepository.save(user);
+        return userMapper.toDTO(user);
     }
 
     public void restoreUser(Long userId) {
