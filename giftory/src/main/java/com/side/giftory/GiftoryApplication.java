@@ -5,11 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
-import org.springframework.web.servlet.DispatcherServlet;
-
-import javax.swing.*;
 
 @SpringBootApplication
 @EnableJpaAuditing // 엔티티 라이프사이클 이벤트 감지 → @CreatedDate/@LastModifiedDate 자동 적용
