@@ -36,11 +36,29 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
     testCompileOnly 'org.projectlombok:lombok'
     testAnnotationProcessor 'org.projectlombok:lombok'
+
+    //MapStruct 관련
+    // 1. MapStruct 라이브러리 (런타임 시 사용)
+    implementation 'org.mapstruct:mapstruct:1.5.5.Final'
+    // 2. MapStruct Annotation Processor (컴파일 시 매퍼 구현체 생성)
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
+    // 3. (선택) Lombok과 함께 사용하는 경우
+    // MapStruct와 Lombok을 함께 사용하면, 매퍼 구현체 생성 시
+    // Lombok의 Getter/Setter 등을 인식할 수 있도록 processor를 함께 명시해야 합니다.
+    annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0' // 중요!
+
+
+    //jwt토큰 관련
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'  // or jjwt-gson
+
 }
 
 tasks.named('test') {
