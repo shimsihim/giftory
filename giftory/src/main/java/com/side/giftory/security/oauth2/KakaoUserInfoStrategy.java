@@ -36,7 +36,7 @@ public class KakaoUserInfoStrategy implements OAuthUserInfoStrategy {
         name = getOrDefaultName(name , socialId);
         String profileImage = OAuth2UserInfoUtils.safeGetString(profile, "profile_image_url");
 
-        return new UserPrincipal(name ,email , "" , "" , socialType ,socialId , null ,attributes);
+        return new UserPrincipal(name ,email , "" ,"", "" , socialType ,socialId , null ,attributes);
     }
 
     @Override

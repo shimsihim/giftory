@@ -16,11 +16,12 @@ import java.util.Map;
 @Getter
 @ToString(exclude = {"password"})
 public class UserPrincipal implements UserDetails, OAuth2User {
-
+    @Setter
     private Long id;
     private String username;
     private String email;
     private String phoneNo;
+    private String loginId;
     private String password;
     private final SocialType socialType;
     private final String socialId;
@@ -29,15 +30,16 @@ public class UserPrincipal implements UserDetails, OAuth2User {
     private Collection<? extends GrantedAuthority> authorities;
 
     //일반 로그인 시 생성
-    public UserPrincipal( String username, String email , String password , String phoneNo , RoleType roleType) {
-        this( username , email ,password, phoneNo ,null , "" ,roleType, Collections.emptyMap());
+    public UserPrincipal( String username, String email , String loginId , String password , String phoneNo , RoleType roleType) {
+        this( username , email ,loginId ,password, phoneNo ,null , "" ,roleType, Collections.emptyMap());
     }
 
     //소셜 로그인 시 생성
-    public UserPrincipal(String username, String email , String password, String phoneNo , SocialType socialType , String socialId , RoleType roleType , Map<String,Object> attributes) {
+    public UserPrincipal(String username, String email ,String loginId,  String password, String phoneNo , SocialType socialType , String socialId , RoleType roleType , Map<String,Object> attributes) {
         this.username = username;
         this.email = email;
         this.phoneNo = phoneNo;
+        this.loginId = loginId;
         this.password = password;
         this.socialType = socialType;
         this.socialId = socialId;
@@ -48,8 +50,10 @@ public class UserPrincipal implements UserDetails, OAuth2User {
 
     public void setByUser(User user){
         this.id = user.getId();
-               this.username = user.getUsername();this.email = user.getEmail();
+               this.username = user.getUsername();
+               this.email = user.getEmail();
                this.phoneNo = user.getPhoneNo();
+               this.loginId = user.getLoginId();
                if (user.getRole() != null) {
                    setRoleType(user.getRole());
                }
