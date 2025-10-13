@@ -20,6 +20,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import java.time.Duration;
+
 @Configuration
 @Slf4j
 public class SecurityConfig {
@@ -57,7 +59,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/","/get-userinfo", "/api/user/signup","/error/**", "/login/**","/oauth2/**", "/css/**", "/js/**", "/images/**","api/**").permitAll()
+                        .requestMatchers("/","/get-userinfo", "/api/user/signup","/error/**", "/login/**","/oauth2/**", "/css/**", "/js/**", "/images/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
@@ -81,7 +83,7 @@ public class SecurityConfig {
                                     .secure(true)   // HTTPS 환경에서만 전송
                                     .path("/")
                                     .sameSite("Strict") // CSRF 공격 방어
-                                    .maxAge(jwtTokenProvider.getVaidTime())
+                                    .maxAge(Duration.ofMillis(jwtTokenProvider.getVaidTime()))
                                     .build();
                             log.warn("redirect to {}", redirectUrl);
 
