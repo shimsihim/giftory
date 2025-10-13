@@ -7,4 +7,5 @@ import com.side.giftory.user.domain.UserSocial;
 public interface UserSocialService {
 
     UserSocial registerSocial(User user , UserPrincipal userPrincipal);
+    UserSocial findSocial(UserPrincipal userPrincipal);
 }

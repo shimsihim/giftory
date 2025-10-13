@@ -1,5 +1,6 @@
 package com.side.giftory.user.service;
 
+import com.side.giftory.common.exception.UserNotFoundException;
 import com.side.giftory.security.RoleType;
 import com.side.giftory.security.UserPrincipal;
 import com.side.giftory.user.domain.User;
@@ -7,6 +8,7 @@ import com.side.giftory.user.domain.UserSocial;
 import com.side.giftory.user.repository.UserRepository;
 import com.side.giftory.user.repository.UserSocialRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -46,8 +48,11 @@ public class UserSocialServiceImpl implements UserSocialService{
         return savedUserSocial;
     }
 
+    @Override
+    @Transactional(readOnly = true)
     public UserSocial findSocial(UserPrincipal userPrincipal) {
-        UserSocial userSocial = userSocialRepository.findBySocialTypeAndSocialIdWithUser(userPrincipal.getSocialType() , userPrincipal.getSocialId()).orElseThrow(()-> new NoSuchElementException());
-        return userSocial;
-    }
+                return userSocialRepository
+                                .findBySocialTypeAndSocialIdWithUser(userPrincipal.getSocialType(), userPrincipal.getSocialId())
+                                .orElseThrow(() -> new UserNotFoundException());
+            }
 }
