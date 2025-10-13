@@ -48,3 +48,10 @@ out/
 *.swp                       # vim swap 파일
 .DS_Store                   # macOS 임시 파일
 Thumbs.db                   # Windows 임시 파일
+
+.gitattributes
+/gradle/**
+giftory/gradle/wrapper/gradle-wrapper.properties
+gradlew
+gradlew.bat
+settings.gradle
