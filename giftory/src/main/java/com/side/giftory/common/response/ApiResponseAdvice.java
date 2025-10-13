@@ -8,6 +8,11 @@ import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.server.ServletServerHttpRequest;
+import org.springframework.http.server.ServletServerHttpResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 @RestControllerAdvice
 public class ApiResponseAdvice implements ResponseBodyAdvice<Object> {
@@ -26,6 +31,20 @@ public class ApiResponseAdvice implements ResponseBodyAdvice<Object> {
     public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType,
                                   Class<? extends HttpMessageConverter<?>> selectedConverterType,
                                   ServerHttpRequest request, ServerHttpResponse response) {
+
+
+        // void/Void 반환, 204, HEAD 는 래핑하지 않음
+        if (returnType.getParameterType() == void.class || returnType.getParameterType() == Void.class) {
+            return null;
+        }
+        if (request instanceof ServletServerHttpRequest && response instanceof ServletServerHttpResponse) {
+            HttpServletRequest req = ((ServletServerHttpRequest) request).getServletRequest();
+            HttpServletResponse res = ((ServletServerHttpResponse) response).getServletResponse();
+            if ("HEAD".equalsIgnoreCase(req.getMethod()) || res.getStatus() == HttpStatus.NO_CONTENT.value()) {
+                    return null;
+            }
+        }
+
 
         // 이미 ApiResponse이면 그대로 반환 (에러핸들링에서 잡힌 경우)
         if (body instanceof ApiResponse) {
