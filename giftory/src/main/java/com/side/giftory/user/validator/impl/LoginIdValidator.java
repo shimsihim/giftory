@@ -17,7 +17,7 @@ public class LoginIdValidator implements ConstraintValidator<ValidLoginId, Strin
 
        if (value.length() < 4 || value.length() > 10) {
            context.disableDefaultConstraintViolation();
-           context.buildConstraintViolationWithTemplate("비밀번호는 8자 이상, 15자 이하이어야 합니다.")
+           context.buildConstraintViolationWithTemplate("아이디는 4자 이상, 10자 이하이어야 합니다.")
                    .addConstraintViolation();
            return false;
        }
