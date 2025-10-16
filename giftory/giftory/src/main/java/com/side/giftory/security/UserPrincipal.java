@@ -1,0 +1,86 @@
+package com.side.giftory.security;
+
+import com.side.giftory.security.oauth2.SocialType;
+import com.side.giftory.user.domain.User;
+import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.OAuth2User;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
+
+
+@Getter
+@ToString(exclude = {"password"})
+public class UserPrincipal implements UserDetails, OAuth2User {
+    @Setter
+    private Long id;
+    private String username;
+    private String email;
+    private String phoneNo;
+    private String loginId;
+    private String password;
+    private final SocialType socialType;
+    private final String socialId;
+    private RoleType roleType;
+    private final Map<String,Object> attributes;
+    private Collection<? extends GrantedAuthority> authorities;
+
+    //일반 로그인 시 생성
+    public UserPrincipal( String username, String email , String loginId , String password , String phoneNo , RoleType roleType) {
+        this( username , email ,loginId ,password, phoneNo ,null , "" ,roleType, Collections.emptyMap());
+    }
+
+    //소셜 로그인 시 생성
+    public UserPrincipal(String username, String email ,String loginId,  String password, String phoneNo , SocialType socialType , String socialId , RoleType roleType , Map<String,Object> attributes) {
+        this.username = username;
+        this.email = email;
+        this.phoneNo = phoneNo;
+        this.loginId = loginId;
+        this.password = password;
+        this.socialType = socialType;
+        this.socialId = socialId;
+        this.roleType = roleType;
+        this.attributes = Collections.unmodifiableMap(attributes);
+        setRoleType(roleType != null ? roleType : RoleType.ROLE_GUEST);
+    }
+
+    public void setByUser(User user){
+        this.id = user.getId();
+               this.username = user.getUsername();
+               this.email = user.getEmail();
+               this.phoneNo = user.getPhoneNo();
+               this.loginId = user.getLoginId();
+               if (user.getRole() != null) {
+                   setRoleType(user.getRole());
+               }
+    }
+
+    public void setRoleType(RoleType roleType) {
+        this.roleType = roleType;
+        this.authorities = Collections.singletonList(new SimpleGrantedAuthority(roleType.name()));
+    }
+
+    // UserDetails
+    @Override
+    public String getUsername() { return username; }
+    @Override
+    public String getPassword() { return password; } // OAuth2 로그인 시 null
+    @Override
+    public boolean isAccountNonExpired() { return true; }
+    @Override
+    public boolean isAccountNonLocked() { return true; }
+    @Override
+    public boolean isCredentialsNonExpired() { return true; }
+    @Override
+    public boolean isEnabled() { return true; }
+
+    // OAuth2User
+    @Override
+    public Map<String,Object> getAttributes() { return attributes; }
+    @Override
+    public String getName() { return String.valueOf(id); }
+}

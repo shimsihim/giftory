@@ -1,6 +1,5 @@
 package com.side.giftory.user.domain;
 
-import com.side.giftory.common.BaseEntity;
 import com.side.giftory.security.RoleType;
 import com.side.giftory.security.oauth2.SocialType;
 import jakarta.persistence.*;
@@ -19,7 +18,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UserSocial extends BaseEntity {
+public class UserSocial {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
