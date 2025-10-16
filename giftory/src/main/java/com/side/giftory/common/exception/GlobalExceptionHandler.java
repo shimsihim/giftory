@@ -47,4 +47,26 @@ public class GlobalExceptionHandler {
     public ApiResponse<Void> handleException(Exception ex) {
         return ApiResponse.error(ErrorCode.INTERNAL_SERVER_ERROR);
     }
+
+    /* // 에러의 경우 ApiResponse가 아니라 기존대로 ResponseEntity로 묶는게 맞는 설계로 보이긴 함.. 고려 필요..
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<?> handleNotFound(NotFoundException e) {
+        return ResponseEntity.status(404).body(ApiResponse.fail(e.getMessage()));
+    }
+
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<?> handleValidation(MethodArgumentNotValidException e) {
+        var msg = e.getBindingResult().getFieldErrors().stream()
+        .map(fe -> fe.getField() + ": " + fe.getDefaultMessage())
+        .findFirst().orElse("Validation error");
+        return ResponseEntity.badRequest().body(ApiResponse.fail(msg));
+    }
+
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<?> handleOthers(Exception e) {
+        return ResponseEntity.internalServerError().body(ApiResponse.fail(e.getMessage()));
+    }
+     */
 }
