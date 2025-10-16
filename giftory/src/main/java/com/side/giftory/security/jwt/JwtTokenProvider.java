@@ -1,6 +1,5 @@
 package com.side.giftory.security.jwt;
 
-import com.side.giftory.security.RoleType;
 import com.side.giftory.security.UserPrincipal;
 import com.side.giftory.user.domain.User;
 import io.jsonwebtoken.*;
@@ -8,10 +7,9 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken; // 💡 추가
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails; // 💡 추가
-import org.springframework.security.core.userdetails.UserDetailsService; // 💡 추가
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
@@ -57,8 +55,6 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    // 💡 --------------------- 추가된 메서드 --------------------- 💡
-
     /**
      * 유효한 토큰을 기반으로 인증 정보(Authentication) 객체를 생성하여 반환합니다.
      */
@@ -96,17 +92,6 @@ public class JwtTokenProvider {
             log.info("JWT 토큰이 비어있음: {}", e.getMessage());
         }
         return false;
-    }
-
-    // 💡 --------------------- 기존 메서드 --------------------- 💡
-
-    public String extractUsername(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(token)
-                .getBody()
-                .get("name", String.class);
     }
 
     public Long extractUserId(String token) {
