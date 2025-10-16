@@ -36,10 +36,10 @@ public class Gifticon extends BaseEntity {
     private GifticonStatus status;
 
     @Column(name = "remaining_amount")
-    private Integer remainingAmount;
+    private Integer remainingAmount = 0;
 
     @Lob // TEXT 타입 매핑
-    private String description;
+    private String description = "";
 
     private LocalDate expiration;
 }

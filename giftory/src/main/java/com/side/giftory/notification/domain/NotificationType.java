@@ -9,11 +9,19 @@ public enum NotificationType {
     GIFTICON_USED("GIFTICON_USED" , "기프티콘 사용");   // 기프티콘 사용됨
     
 
-    String name;
-    String description;
+    private final String name;
+    private final String description;
 
     private NotificationType(String name, String description) {
         this.name = name;
         this.description = description;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
     }
 }

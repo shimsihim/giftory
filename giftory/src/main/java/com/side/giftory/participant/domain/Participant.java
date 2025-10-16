@@ -27,9 +27,6 @@ public class Participant {
     @JoinColumn(name = "group_id", nullable = false)
     private Group group;
 
-    @Column(name = "group_name", length = 20)
-    private String groupName;
-
     private LocalDateTime deletedAt;
 
     @Column(name = "created_at", nullable = false)

@@ -5,11 +5,18 @@ public enum GifticonStatus {
     USED("USED" , "사용 완료"),      // 사용 완료
     EXPIRED("EXPIRED" , "기간 만료");    // 기간 만료
 
-    String name;
-    String description;
+    private final String name;
+    private final String description;
 
     private GifticonStatus(String name, String description) {
         this.name = name;
         this.description = description;
+    }
+
+    public String getName() {
+        return name;
+    }
+    public String getDescription() {
+        return description;
     }
 }
