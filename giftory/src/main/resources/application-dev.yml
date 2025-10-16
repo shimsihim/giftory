@@ -45,6 +45,9 @@ jwt:
 app:
   frontend:
     url: http://localhost:3000
+  invite:
+    secret: ${JWT_INVITE_SECRET}
+    ttl-hours: 168 # 만료 7일
 
 
 logging:

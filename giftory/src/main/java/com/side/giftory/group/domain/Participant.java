@@ -1,6 +1,5 @@
-package com.side.giftory.participant.domain;
+package com.side.giftory.group.domain;
 
-import com.side.giftory.group.domain.Group;
 import com.side.giftory.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;

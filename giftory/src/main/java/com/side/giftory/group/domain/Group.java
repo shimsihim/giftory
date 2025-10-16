@@ -20,11 +20,7 @@ public class Group {
     @JoinColumn(name = "owner_id", nullable = false)
     private User owner;
 
-    @Column(length = 255)
-    private String password;
-
-    @Column(name = "password_hint", length = 100)
-    private String passwordHint;
+    private String description = "";
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
