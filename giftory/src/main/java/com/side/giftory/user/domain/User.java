@@ -23,19 +23,19 @@ public class User extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column( length = 100)
+    @Column(length = 10)
     @Setter
     private String username;
 
 
-    @Column(nullable = true, unique = true, length = 100)
+    @Column(length = 50)
     private String email;
 
-    @Column(nullable = true,unique = true, length = 100)
+    @Column(unique = true, length = 100)
     @Setter
     private String loginId;
 
-    @Column
+    @Column(length = 100)
     private String password;
 
     @Column(length = 20)
@@ -44,7 +44,7 @@ public class User extends BaseEntity {
     @Column(name = "profile_url", length = 255)
     private String profileUrl;
 
-    @Column(length = 20)
+    @Column(nullable = false, length = 20)
     @Enumerated(EnumType.STRING)
     @Setter
     private RoleType role;
